@@ -113,7 +113,7 @@ npm run dev
 DJANGO_SECRET_KEY=your-secret-key
 DJANGO_DEBUG=True
 OPENAI_API_KEY=your-openai-key
-DATABASE_URL=sqlite:///db.sqlite3
+DATABASE_URL=sqlite:///db.sqlite3 //请根据实际需求选择数据库
 ```
 
 ## 🤝 贡献指南
