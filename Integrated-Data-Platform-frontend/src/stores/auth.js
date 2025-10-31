@@ -1,3 +1,6 @@
+// Copyright (c) 2025 YycKop
+// MIT License
+// Integrated-Data-Platform-frontend/src/stores/auth.js
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { authAPI } from '../api/auth'
@@ -64,7 +67,6 @@ export const useAuthStore = defineStore('auth', () => {
       isAuthenticated.value = true
       return response
     } catch (error) {
-      console.error('获取用户信息失败:', error)
       user.value = null
       isAuthenticated.value = false
       throw error
@@ -73,24 +75,11 @@ export const useAuthStore = defineStore('auth', () => {
 
   const testConnection = async () => {
     try {
-      // 首先测试基础连接
       await authAPI.getCsrfToken()
-      console.log('✅ 后端连接正常')
       return true
     } catch (error) {
-      console.error('❌ 后端连接测试失败:', error)
-
-      // 检查错误类型
-      if (error.code === 'NETWORK_ERROR' || error.message.includes('Network Error')) {
-        console.error('🔌 网络错误：请确保后端服务已启动')
-        throw new Error('无法连接到后端服务，请确保后端服务已启动并运行在 http://localhost:8000')
-      } else if (error.response?.status === 404) {
-        console.error('🔍 404错误：API端点不存在')
-        throw new Error('后端API端点不存在，请检查后端路由配置')
-      } else {
-        console.error('❌ 其他连接错误:', error.message)
-        throw new Error(`连接失败: ${error.message}`)
-      }
+      console.error('后端连接测试失败:', error)
+      return false
     }
   }
 
