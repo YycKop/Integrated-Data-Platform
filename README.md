@@ -151,13 +151,17 @@ REDIS_URL=redis://localhost:6379/0
 ## 📸 功能展示
 
 ### 🔐 用户认证
-![登录页面](images/登录页面.png)
+![登录页面](images/登录页.png)
 *安全可靠的用户登录系统*
 
 ### 🏠 系统主页
 ![主页1](images/主页1.png)
 ![主页2](images/主页2.png)  
 *直观的数据概览和快速导航*
+
+### 🧑‍💻 个人信息页
+![个人信息页](images/个人信息页.png)
+*用户个人信息展示和管理*
 
 ### 📁 数据管理
 ![数据源页](images/数据源页.png)
@@ -177,7 +181,7 @@ REDIS_URL=redis://localhost:6379/0
 *可定制的数据监控看板*
 
 ### 🤖 AI 智能分析
-![AI模型](images/AI模型.png)
+![AI模型](images/AI模型页.png)
 ![智能分析页](images/智能分析页.png)
 *机器学习模型训练和智能分析*
 
@@ -254,10 +258,8 @@ REDIS_URL=redis://localhost:6379/0
 
 ---
 
-<div align="center">
-
 **如果这个项目对您有帮助，请给个 ⭐️ 支持一下！**
 
 ![img.png](img.png)
 
-</div>
+
