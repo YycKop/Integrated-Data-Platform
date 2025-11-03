@@ -124,6 +124,10 @@ DATABASE_URL=sqlite:///db.sqlite3 //请根据实际需求选择数据库
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 开启 Pull Request
 
+## 目前项目缺陷
+1.模型训练只支持部分模型，其余模型还待开发
+2.AI分析并不完善，只是提出了框架
+
 ## 📄 许可证
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
