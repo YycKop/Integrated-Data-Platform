@@ -72,7 +72,7 @@ pip install -r requirements.txt
 # 数据库迁移
 python manage.py migrate
 
-# 创建超级用户（可选）
+# 创建超级用户（推荐）
 python manage.py createsuperuser
 
 # 启动开发服务器
