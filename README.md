@@ -260,6 +260,6 @@ REDIS_URL=redis://localhost:6379/0
 
 **如果这个项目对您有帮助，请给个 ⭐️ 支持一下！**
 
-![img.png](img.png)
+![img.png](images/img.png)
 
 
