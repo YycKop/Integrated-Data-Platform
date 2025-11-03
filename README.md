@@ -150,8 +150,6 @@ REDIS_URL=redis://localhost:6379/0
 
 ## 📸 功能展示
 
-## 📸 功能展示
-
 ### 🔐 用户认证
 ![登录页面](images/登录页面.png)
 *安全可靠的用户登录系统*
@@ -182,6 +180,7 @@ REDIS_URL=redis://localhost:6379/0
 ![AI模型](images/AI模型.png)
 ![智能分析页](images/智能分析页.png)
 *机器学习模型训练和智能分析*
+
 ## 📋 功能模块详情
 
 | 模块 | 图标 | 功能描述 |
@@ -259,6 +258,6 @@ REDIS_URL=redis://localhost:6379/0
 
 **如果这个项目对您有帮助，请给个 ⭐️ 支持一下！**
 
-![img.png](images/img.png)
+![img.png](img.png)
 
 </div>
