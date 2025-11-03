@@ -6,10 +6,6 @@
     <!-- 页面头部保持不变 -->
     <div class="page-header">
       <h2>数据集管理</h2>
-      <el-button type="primary" @click="showCreateDialog = true">
-        <el-icon><Plus /></el-icon>
-        新建数据集
-      </el-button>
       <el-button @click="loadDatasets" :loading="loading">
         <el-icon><Refresh /></el-icon>
         刷新

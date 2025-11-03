@@ -30,6 +30,14 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         return request.user.is_authenticated and request.user.role == 'admin'
 
 
+class IsAdminOrAnalyst(permissions.BasePermission):
+    """管理员或分析师可以编辑，其他认证用户只能查看"""
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return request.user.is_authenticated
+        return request.user.is_authenticated and request.user.role in ['admin', 'analyst']
+
 class DataSourceViewSet(viewsets.ModelViewSet):
     queryset = DataSource.objects.all()
     serializer_class = DataSourceSerializer
@@ -501,6 +509,140 @@ class DataSourceViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({'error': f'获取文件列表失败: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=True, methods=['post'])
+    def test_connection(self, request, pk=None):
+        """测试数据库连接"""
+        data_source = self.get_object()
+
+        # 检查用户权限
+        if data_source.created_by != request.user and request.user.role != 'admin':
+            return Response({'error': '没有权限访问此数据源'}, status=status.HTTP_403_FORBIDDEN)
+
+        if data_source.type != 'database':
+            return Response({'error': '此数据源不是数据库类型'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            print(f"测试数据库连接，数据源ID: {data_source.id}")
+            print(f"连接配置: {data_source.connection_config}")
+
+            # 使用 DatabaseConnector 测试连接
+            success, message = DatabaseConnector.test_connection(data_source.connection_config)
+
+            # 更新数据源状态
+            data_source.last_connection_test = timezone.now()
+            if success:
+                data_source.status = 'active'
+                data_source.error_message = ''
+            else:
+                data_source.status = 'error'
+                data_source.error_message = message
+            data_source.save()
+
+            return Response({
+                'success': success,
+                'message': message,
+                'status': data_source.status,
+                'last_connection_test': data_source.last_connection_test
+            })
+
+        except Exception as e:
+            print(f"测试连接异常: {str(e)}")
+            import traceback
+            print(f"详细错误: {traceback.format_exc()}")
+
+            # 更新错误状态
+            data_source.status = 'error'
+            data_source.error_message = str(e)
+            data_source.last_connection_test = timezone.now()
+            data_source.save()
+
+            return Response({
+                'success': False,
+                'message': f'测试连接时发生错误: {str(e)}',
+                'status': 'error'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=True, methods=['get'])
+    def get_database_tables(self, request, pk=None):
+        """获取数据库表列表"""
+        data_source = self.get_object()
+
+        # 检查用户权限
+        if data_source.created_by != request.user and request.user.role != 'admin':
+            return Response({'error': '没有权限访问此数据源'}, status=status.HTTP_403_FORBIDDEN)
+
+        if data_source.type != 'database':
+            return Response({'error': '此数据源不是数据库类型'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            print(f"获取数据库表列表，数据源ID: {data_source.id}")
+
+            # 使用 DatabaseConnector 获取表列表
+            success, result = DatabaseConnector.get_tables(data_source.connection_config)
+
+            if success:
+                return Response({
+                    'success': True,
+                    'tables': result,
+                    'data_source_id': data_source.id
+                })
+            else:
+                return Response({
+                    'success': False,
+                    'error': result
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print(f"获取表列表异常: {str(e)}")
+            return Response({
+                'success': False,
+                'error': f'获取表列表时发生错误: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=True, methods=['get'])
+    def get_table_preview(self, request, pk=None):
+        """获取表数据预览"""
+        data_source = self.get_object()
+        table_name = request.query_params.get('table_name')
+
+        if not table_name:
+            return Response({'error': '缺少表名参数'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 检查用户权限
+        if data_source.created_by != request.user and request.user.role != 'admin':
+            return Response({'error': '没有权限访问此数据源'}, status=status.HTTP_403_FORBIDDEN)
+
+        if data_source.type != 'database':
+            return Response({'error': '此数据源不是数据库类型'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            print(f"获取表预览，数据源ID: {data_source.id}, 表名: {table_name}")
+
+            # 使用 DatabaseConnector 获取表预览
+            success, result = DatabaseConnector.get_table_preview(data_source.connection_config, table_name)
+
+            if success:
+                return Response({
+                    'success': True,
+                    'table_name': table_name,
+                    'data': result['data'],
+                    'columns': result['columns'],
+                    'total_rows': result['total_rows'],
+                    'preview_rows': result['preview_rows']
+                })
+            else:
+                return Response({
+                    'success': False,
+                    'error': result
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print(f"获取表预览异常: {str(e)}")
+            return Response({
+                'success': False,
+                'error': f'获取表预览时发生错误: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class DatasetViewSet(viewsets.ModelViewSet):

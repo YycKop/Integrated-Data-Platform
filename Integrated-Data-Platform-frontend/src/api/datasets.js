@@ -62,10 +62,10 @@ export const datasetsAPI = {
   getDataSourceFiles: (dataSourceId) => api.get(`/data-sources/${dataSourceId}/files/`),
   getFilePreview: (datasetId) => api.get(`/datasets/${datasetId}/preview/`),
 
-  // 数据库相关API保持不变
+  // 数据库相关API - 修改这些行
   testConnection: (dataSourceId) => api.post(`/data-sources/${dataSourceId}/test_connection/`),
-  getDatabaseTables: (dataSourceId) => api.get(`/data-sources/${dataSourceId}/tables/`),
-  getTablePreview: (dataSourceId, tableName) => api.get(`/data-sources/${dataSourceId}/table_preview/?table=${tableName}`),
+  getDatabaseTables: (dataSourceId) => api.get(`/data-sources/${dataSourceId}/get_database_tables/`), // 修改这里
+  getTablePreview: (dataSourceId, tableName) => api.get(`/data-sources/${dataSourceId}/get_table_preview/?table_name=${tableName}`), // 修改这里
   getTableSchema: (dataSourceId, tableName) => api.get(`/data-sources/${dataSourceId}/table_schema/?table=${tableName}`),
   importTable: (dataSourceId, data) => api.post(`/data-sources/${dataSourceId}/import_table/`, data),
 }
