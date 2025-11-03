@@ -61,14 +61,6 @@
         <span>还没有账号？</span>
         <el-button type="text" @click="showRegister = true">立即注册</el-button>
       </div>
-
-      <!-- 测试账号提示 -->
-      <div class="test-account">
-        <el-divider content-position="center">测试账号</el-divider>
-        <p>用户名: testuser</p>
-        <p>密码: testpass123</p>
-        <el-button type="text" size="small" @click="fillTestAccount">填充测试账号</el-button>
-      </div>
     </div>
 
     <!-- 注册对话框 -->
@@ -279,12 +271,6 @@ const handleRegisterClose = () => {
   })
 }
 
-const fillTestAccount = () => {
-  form.username = 'testuser'
-  form.password = 'testpass123'
-  ElMessage.info('已填充测试账号，请点击登录')
-}
-
 onMounted(() => {
   testBackendConnection()
 })
@@ -330,15 +316,5 @@ onMounted(() => {
 
 .connection-status {
   margin-bottom: 20px;
-}
-
-.test-account {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-}
-
-.test-account p {
-  margin: 5px 0;
 }
 </style>
